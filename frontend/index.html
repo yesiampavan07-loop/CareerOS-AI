@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerOS AI — Real Intelligence Career Platform</title>
+<meta name="description" content="AI-powered career platform: Resume Analyzer, JD Matcher, Mock Interviews, Skill Gap Analysis powered by Claude AI."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ANIMATED BACKGROUND -->
+<div class="orbs">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+
+<!-- ════════════ LOGIN PAGE ════════════ -->
+<div id="login-page" class="auth-page" style="display:none;">
+  <div class="auth-wrap">
+
+    <!-- Left info panel -->
+    <div class="auth-left">
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        <div class="logo-text">CareerOS AI</div>
+      </div>
+      <p class="tagline">
+        Upload your real resume. Get real AI feedback.<br>
+        Practice real interviews. Build a real career.
+      </p>
+      <div class="feat-box">
+        <h3>✨ What makes this different:</h3>
+        <div class="feat"><span>📄</span><span>Upload any PDF — AI reads every line and gives a genuine ATS audit with specific fixes.</span></div>
+        <div class="feat"><span>🎯</span><span>Paste any job description — get a real semantic match score and tailored cover letter outline.</span></div>
+        <div class="feat"><span>🎤</span><span>Role-specific mock interviews with real AI feedback and scoring on every answer.</span></div>
+        <div class="feat"><span>📊</span><span>Skill gap + personalized roadmap generated from your actual resume content.</span></div>
+        <div class="feat"><span>💾</span><span>All results saved — resume history, interview scores, JD matches all stored securely.</span></div>
+      </div>
+    </div>
+
+    <!-- Right auth panel -->
+    <div class="auth-right">
+      <div class="auth-tabs">
+        <button class="auth-tab" onclick="switchAuthTab('tab-signin',this)">Sign In</button>
+        <button class="auth-tab on" onclick="switchAuthTab('tab-register',this)">Create Account</button>
+      </div>
+
+      <!-- Error message -->
+      <div id="auth-error" class="alert a-error hidden"></div>
+
+      <!-- Sign In Form -->
+      <div id="tab-signin">
+        <div class="form-title">Login to your Account</div>
+        <div class="form-sub">Welcome back — your career intelligence is waiting.</div>
+        <label class="flabel">Username</label>
+        <div class="fwrap"><input type="text" id="login-user" placeholder="Enter your username"/></div>
+        <label class="flabel">Password</label>
+        <div class="fwrap">
+          <input type="password" id="login-pass" placeholder="Enter your password"/>
+          <button class="eyebtn" onclick="togglePwd('login-pass',this)">👁</button>
+        </div>
+        <button class="gbtn" id="login-btn" onclick="doLogin()">Log In</button>
+      </div>
+
+      <!-- Register Form -->
+      <div id="tab-register" class="hidden">
+        <div class="form-title">Create Account</div>
+        <div class="form-sub">Join CareerOS AI and transform your career.</div>
+        <label class="flabel">Full Name</label>
+        <div class="fwrap"><input type="text" id="reg-name" placeholder="Your full name"/></div>
+        <label class="flabel">Username</label>
+        <div class="fwrap"><input type="text" id="reg-user" placeholder="Choose a username"/></div>
+        <label class="flabel">Email (optional)</label>
+        <div class="fwrap"><input type="email" id="reg-email" placeholder="your@email.com"/></div>
+        <label class="flabel">Password</label>
+        <div class="fwrap">
+          <input type="password" id="reg-pass" placeholder="Min 6 characters"/>
+          <button class="eyebtn" onclick="togglePwd('reg-pass',this)">👁</button>
+        </div>
+        <button class="gbtn" id="reg-btn" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MAIN APP ════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-icon">🚀</div>
+      <div class="sb-brand-text">CareerOS AI</div>
+    </div>
+    <div class="sb-user">
+      <div class="avatar" id="sidebar-avatar">Y</div>
+      <div>
+        <div class="uname" id="sidebar-name">User</div>
+        <div class="urole">CSE Student • B.Tech</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-sec">Overview</div>
+      <div class="nitem on"  onclick="go('dash',this)">      <span class="nicon">🏠</span>Dashboard</div>
+      <div class="nav-sec">Career Tools</div>
+      <div class="nitem" onclick="go('resume',this)">    <span class="nicon">📄</span>Resume Analyzer</div>
+      <div class="nitem" onclick="go('jd',this)">        <span class="nicon">🎯</span>JD Matcher</div>
+      <div class="nitem" onclick="go('interview',this)"> <span class="nicon">🎤</span>Mock Interview<span class="nbadge">AI</span></div>
+      <div class="nitem" onclick="go('skillgap',this)">  <span class="nicon">📊</span>Skill Gap</div>
+      <div class="nitem" onclick="go('roadmap',this)">   <span class="nicon">🗺️</span>Career Roadmap</div>
+      <div class="nav-sec">Resume</div>
+      <div id="sb-res-ok" class="res-pill hidden">
+        <div class="res-pill-dot"></div>
+        <div class="res-pill-txt" id="sb-res-name">—</div>
+      </div>
+      <div id="sb-res-no" style="padding:8px 13px;font-size:11px;color:var(--muted);">No resume uploaded yet</div>
+    </nav>
+    <div class="sb-foot">
+      <button class="lout" onclick="doLogout()">🚪 Log Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="ttitle">Dashboard</div>
+      <div class="tbr">
+        <div class="tbadge tbadge-p" id="tb-res">📄 No Resume</div>
+        <div class="tbadge tbadge-g">🟢 Claude AI</div>
+      </div>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="page on" id="page-dash">
+      <div class="sec-head">
+        <div class="sec-title">👋 Welcome back, <span id="dash-name" style="background:var(--gp);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">User</span></div>
+        <div class="sec-sub">Upload your resume to unlock full AI-powered career intelligence.</div>
+      </div>
+      <div class="alert a-info" id="dash-alert">
+        ℹ️ <strong>Get started:</strong> Go to <strong>Resume Analyzer</strong> → upload your PDF → all tools will use your real resume.
+      </div>
+      <div class="g4" style="margin-bottom:20px;">
+        <div class="scard"><div class="scard-icon">📄</div><div class="scard-val" style="background:var(--gp);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-ats">—</div><div class="scard-lbl">ATS Score</div><div class="scard-chg" id="d-ats-s" style="color:var(--dim);">Upload resume first</div></div>
+        <div class="scard"><div class="scard-icon">🎯</div><div class="scard-val" style="background:var(--gb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-jd">—</div><div class="scard-lbl">JD Match Score</div><div class="scard-chg" id="d-jd-s" style="color:var(--dim);">Run JD Matcher</div></div>
+        <div class="scard"><div class="scard-icon">🎤</div><div class="scard-val" style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-int">0</div><div class="scard-lbl">Mock Interviews</div><div class="scard-chg" style="color:var(--dim);">Start practising</div></div>
+        <div class="scard"><div class="scard-icon">📊</div><div class="scard-val" style="background:var(--go);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-sk">—</div><div class="scard-lbl">Skills Found</div><div class="scard-chg" id="d-sk-s" style="color:var(--dim);">Analyze resume first</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-title">🚀 Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-top:6px;">
+            <button class="btn btn-p btn-full" onclick="go('resume',document.querySelector('[onclick*=resume]'))">📄 Upload &amp; Analyze Resume</button>
+            <button class="btn btn-s btn-full" onclick="go('jd',document.querySelector('[onclick*=jd]'))">🎯 Match a Job Description</button>
+            <button class="btn btn-s btn-full" onclick="go('interview',document.querySelector('[onclick*=interview]'))">🎤 Start Mock Interview</button>
+            <button class="btn btn-s btn-full" onclick="go('skillgap',document.querySelector('[onclick*=skillgap]'))">📊 Analyze Skill Gap</button>
+            <button class="btn btn-s btn-full" onclick="go('roadmap',document.querySelector('[onclick*=roadmap]'))">🗺️ Generate Career Roadmap</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💡 How It Works</div>
+          <div style="margin-top:6px;">
+            <div style="display:flex;gap:12px;margin-bottom:14px;"><span style="font-size:22px;">1️⃣</span><div><div style="font-size:13px;font-weight:600;">Upload your PDF resume</div><div style="font-size:12px;color:var(--dim);margin-top:2px;">Server extracts text — Claude reads every line.</div></div></div>
+            <div style="display:flex;gap:12px;margin-bottom:14px;"><span style="font-size:22px;">2️⃣</span><div><div style="font-size:13px;font-weight:600;">Get a real ATS audit</div><div style="font-size:12px;color:var(--dim);margin-top:2px;">Actual score, keyword gaps, specific rewrite suggestions.</div></div></div>
+            <div style="display:flex;gap:12px;margin-bottom:14px;"><span style="font-size:22px;">3️⃣</span><div><div style="font-size:13px;font-weight:600;">Match any job description</div><div style="font-size:12px;color:var(--dim);margin-top:2px;">Paste a JD, get your real match % and tailoring tips.</div></div></div>
+            <div style="display:flex;gap:12px;"><span style="font-size:22px;">4️⃣</span><div><div style="font-size:13px;font-weight:600;">All results saved</div><div style="font-size:12px;color:var(--dim);margin-top:2px;">Resume history, interview scores, and JD matches stored in your account.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RESUME ANALYZER ── -->
+    <div class="page" id="page-resume">
+      <div class="sec-head">
+        <div class="sec-title">📄 AI Resume Analyzer</div>
+        <div class="sec-sub">Upload your real resume — it's parsed on the server and analyzed by Claude AI for a genuine ATS audit.</div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="card mb16">
+            <div class="card-title">📤 Upload Your Resume</div>
+            <div class="card-sub">PDF supported — server extracts text then Claude analyzes it</div>
+            <div class="uparea" id="uparea"
+              ondragover="event.preventDefault();this.classList.add('drag')"
+              ondragleave="this.classList.remove('drag')"
+              ondrop="dropFile(event)">
+              <input type="file" accept=".pdf,.txt" onchange="fileChosen(event)"/>
+              <div class="up-icon">📄</div>
+              <div class="up-txt" id="up-txt">Drop your resume here</div>
+              <div class="up-sub" id="up-sub">Click to browse • PDF / TXT</div>
+            </div>
+            <button class="btn btn-p btn-full" id="analyze-btn" style="margin-top:14px;" onclick="analyzeResume()" disabled>
+              🔍 Analyze with Claude AI
+            </button>
+          </div>
+          <div class="card hidden" id="kw-card">
+            <div class="card-title">🔑 Keyword Extraction</div>
+            <div style="margin-bottom:12px;">
+              <div style="font-size:11px;color:var(--dim);margin-bottom:7px;">✅ Skills &amp; Technologies Found</div>
+              <div id="kw-found"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--dim);margin-bottom:7px;">❌ Missing Keywords (Add to boost ATS)</div>
+              <div id="kw-miss"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card hidden mb16" id="score-card">
+            <div class="card-title">📊 ATS Score Breakdown</div>
+            <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+              <div class="ring-wrap">
+                <div class="ring" style="width:120px;height:120px;">
+                  <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="9"/>
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="url(#rg1)" stroke-width="9"
+                      stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
+                      id="ats-circle" style="transition:stroke-dashoffset 1.5s ease;transform:rotate(-90deg);transform-origin:60px 60px;"/>
+                    <defs><linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#7c6bff"/>
+                      <stop offset="100%" stop-color="#d966ff"/>
+                    </linearGradient></defs>
+                  </svg>
+                  <div class="ring-val">
+                    <div class="rnum" id="ats-num" style="background:var(--gp);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">—</div>
+                    <div class="rlbl">ATS Score</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1;min-width:140px;" id="score-bars"></div>
+            </div>
+          </div>
+          <div class="card hidden" id="sugg-card">
+            <div class="card-title">💡 Claude's Detailed Feedback</div>
+            <div id="sugg-content" class="ai-out" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── JD MATCHER ── -->
+    <div class="page" id="page-jd">
+      <div class="sec-head">
+        <div class="sec-title">🎯 JD Matcher</div>
+        <div class="sec-sub">Paste any job description. Claude compares it to your resume and gives a real match score with tailoring advice.</div>
+      </div>
+      <div id="jd-no-res" class="alert a-warn">⚠️ Upload your resume in <strong>Resume Analyzer</strong> first for accurate matching.</div>
+      <div class="g2">
+        <div>
+          <div class="card">
+            <div class="card-title">📋 Paste Job Description</div>
+            <div class="card-sub">Copy &amp; paste the full JD from LinkedIn, Naukri, Indeed, etc.</div>
+            <textarea id="jdtext" rows="13" placeholder="Paste the complete job description here...&#10;&#10;Tip: Include role title, responsibilities, and requirements for the most accurate match."></textarea>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <button class="btn btn-p" id="jd-btn" style="flex:1;" onclick="matchJD()">🎯 Match with Claude AI</button>
+              <button class="btn btn-s btn-sm" onclick="sampleJD()">Sample JD</button>
+            </div>
+          </div>
+        </div>
+        <div id="jd-res-col">
+          <div class="alert a-info">ℹ️ Paste a job description and click Match to see your compatibility score.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOCK INTERVIEW ── -->
+    <div class="page" id="page-interview">
+      <div class="sec-head">
+        <div class="sec-title">🎤 AI Mock Interview</div>
+        <div class="sec-sub">Claude asks role-specific questions based on your resume and scores every answer with detailed feedback.</div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="card mb16">
+            <div class="card-title">⚙️ Interview Setup</div>
+            <label class="flabel" style="margin-bottom:5px;">Target Role</label>
+            <select id="int-role" style="margin-bottom:12px;">
+              <option>Full Stack Developer</option>
+              <option>Backend Developer</option>
+              <option>Frontend Developer</option>
+              <option>ML Engineer</option>
+              <option>Data Analyst</option>
+              <option>DevOps Engineer</option>
+              <option>Software Engineer (SDE)</option>
+              <option>Data Scientist</option>
+            </select>
+            <label class="flabel" style="margin-bottom:5px;">Interview Type</label>
+            <div class="mtabs">
+              <button class="mtab on" onclick="setIT(this,'Technical')">Technical</button>
+              <button class="mtab" onclick="setIT(this,'Behavioral')">Behavioral</button>
+              <button class="mtab" onclick="setIT(this,'Mixed')">Mixed</button>
+            </div>
+            <button class="btn btn-p btn-full" id="start-int-btn" onclick="startInterview()">🎤 Start Interview</button>
+          </div>
+          <div class="card hidden" id="int-score-card">
+            <div class="card-title">📊 Session Results</div>
+            <div style="text-align:center;padding:12px 0;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;background:var(--gp);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="int-score-val">—</div>
+              <div style="font-size:12px;color:var(--dim);">Overall Performance</div>
+            </div>
+            <div id="int-score-detail"></div>
+            <button class="btn btn-s btn-full" style="margin-top:12px;" onclick="resetInterview()">🔄 New Session</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💬 Interview Room</div>
+          <div class="chatbox" id="chatbox">
+            <div class="cmsg ai">
+              <div class="csender">🤖 Claude AI</div>
+              <div class="cbubble">Welcome! 👋 Set up your interview on the left and click <strong>Start Interview</strong>. I'll ask 5 questions based on your resume and role, then give detailed feedback on every answer.</div>
+            </div>
+          </div>
+          <div class="cinput-row">
+            <input class="cinput" id="cinput" placeholder="Type your answer here…" disabled
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){sendAns();}"/>
+            <button class="btn btn-p" id="send-btn" onclick="sendAns()" disabled>Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SKILL GAP ── -->
+    <div class="page" id="page-skillgap">
+      <div class="sec-head">
+        <div class="sec-title">📊 Skill Gap Analyzer</div>
+        <div class="sec-sub">Claude compares your actual resume skills against industry requirements for your target role.</div>
+      </div>
+      <div id="sg-no-res" class="alert a-warn">⚠️ Upload your resume in <strong>Resume Analyzer</strong> first for personalized analysis.</div>
+      <div class="card mb16">
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="flex:1;min-width:180px;">
+            <label class="flabel" style="margin-bottom:5px;">Target Role</label>
+            <select id="sg-role">
+              <option>Full Stack Developer</option>
+              <option>ML Engineer</option>
+              <option>Data Analyst</option>
+              <option>DevOps Engineer</option>
+              <option>Backend Developer</option>
+              <option>Data Scientist</option>
+            </select>
+          </div>
+          <button class="btn btn-p" id="sg-btn" onclick="analyzeSkillGap()">📊 Analyze with Claude</button>
+        </div>
+      </div>
+      <div id="sg-results">
+        <div class="alert a-info">ℹ️ Select your target role and click Analyze to see your personalized skill gap.</div>
+      </div>
+    </div>
+
+    <!-- ── CAREER ROADMAP ── -->
+    <div class="page" id="page-roadmap">
+      <div class="sec-head">
+        <div class="sec-title">🗺️ Career Roadmap</div>
+        <div class="sec-sub">Claude generates a personalized step-by-step roadmap based on your actual resume and target role.</div>
+      </div>
+      <div class="card mb16">
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="flex:1;min-width:180px;">
+            <label class="flabel" style="margin-bottom:5px;">Target Role</label>
+            <select id="rm-role">
+              <option>Full Stack Developer</option>
+              <option>ML Engineer</option>
+              <option>Data Analyst</option>
+              <option>DevOps Engineer</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px;">
+            <label class="flabel" style="margin-bottom:5px;">Timeline</label>
+            <select id="rm-time">
+              <option>30 Days</option>
+              <option selected>90 Days</option>
+              <option>6 Months</option>
+            </select>
+          </div>
+          <button class="btn btn-p" id="rm-btn" onclick="genRoadmap()">🗺️ Generate Roadmap</button>
+        </div>
+      </div>
+      <div id="rm-results">
+        <div class="alert a-info">ℹ️ Select your target role and click Generate to create your personalized roadmap.</div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- end #app -->
+
+<!-- JavaScript -->
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
