@@ -1,13 +1,11 @@
-// Uses Groq API — 100% FREE, no credit card, no expiry
-// Get key: https://console.groq.com (sign up with Google/GitHub)
-
 const fetch = require('node-fetch');
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 async function callGemini(prompt, maxTokens = 1800) {
   const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('No API key set in .env');
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const res = await fetch(GROQ_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -15,9 +13,15 @@ async function callGemini(prompt, maxTokens = 1800) {
     },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful AI assistant. Always respond with valid JSON only. No markdown, no extra text, just pure JSON.'
+        },
+        { role: 'user', content: prompt }
+      ],
       max_tokens: maxTokens,
-      temperature: 0.7
+      temperature: 0.3
     })
   });
 
@@ -30,17 +34,27 @@ async function callGemini(prompt, maxTokens = 1800) {
 
 function parseJSON(raw) {
   let clean = raw.replace(/```json|```/g, '').trim();
-  const s = clean.indexOf('{'), e = clean.lastIndexOf('}');
+  const s = clean.indexOf('{');
+  const e = clean.lastIndexOf('}');
   if (s === -1 || e === -1) throw new Error('No JSON found');
+  let jsonStr = clean.substring(s, e + 1);
   try {
-    return JSON.parse(clean.substring(s, e + 1));
+    return JSON.parse(jsonStr);
   } catch(e1) {
-    const fixed = clean.substring(s, e + 1)
+    // Fix common issues
+    jsonStr = jsonStr
       .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ')
-      .replace(/\n/g, '\\n')
+      .replace(/\n/g, ' ')
       .replace(/\r/g, '')
-      .replace(/\t/g, ' ');
-    return JSON.parse(fixed);
+      .replace(/\t/g, ' ')
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']');
+    try {
+      return JSON.parse(jsonStr);
+    } catch(e2) {
+      jsonStr = jsonStr.replace(/[^\x20-\x7E]/g, '');
+      return JSON.parse(jsonStr);
+    }
   }
 }
 
