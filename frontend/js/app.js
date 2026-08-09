@@ -2,7 +2,18 @@
 //  frontend/js/app.js
 //  Main application logic
 // ══════════════════════════════════════════════
+// ── LANDING PAGE ──
+function showLogin() {
+  document.getElementById('landing-page').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  switchAuthTab('tab-signin', document.querySelector('.auth-tab'));
+}
 
+function showRegister() {
+  document.getElementById('landing-page').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  switchAuthTab('tab-register', document.querySelectorAll('.auth-tab')[1]);
+}
 // ── Global state ────────────────────────────
 let currentResumeId = null;
 let currentSessionId = null;
@@ -18,7 +29,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (user && token) {
     launchApp(user);
   } else {
-    document.getElementById('login-page').style.display = 'flex';
+    document.getElementById('landing-page').style.display = 'flex';
+    document.getElementById('login-page').style.display = 'none';
   }
 });
 

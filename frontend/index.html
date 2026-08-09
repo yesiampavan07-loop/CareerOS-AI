@@ -18,6 +18,110 @@
 </div>
 
 <!-- ════════════ LOGIN PAGE ════════════ -->
+<div id="landing-page" style="display:flex;">
+  <!-- NAVBAR -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,9,22,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:28px;">🚀</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;background:linear-gradient(135deg,#7c6bff,#d966ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">CareerOS AI</span>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button onclick="showLogin()" style="padding:10px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#eeeeff;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Sign In</button>
+      <button onclick="showRegister()" style="padding:10px 24px;background:linear-gradient(135deg,#7c6bff,#d966ff);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Get Started Free</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div style="min-height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;">
+    <div style="inline-size:fit-content;background:rgba(124,107,255,0.1);border:1px solid rgba(124,107,255,0.25);border-radius:20px;padding:6px 16px;font-size:12px;color:#7c6bff;font-weight:500;margin-bottom:24px;">✨ AI-Powered Career Platform — 100% Free</div>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.1;margin-bottom:20px;max-width:900px;">
+      Land Your Dream Job with
+      <span style="background:linear-gradient(135deg,#7c6bff,#d966ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"> Real AI Feedback</span>
+    </h1>
+    <p style="font-size:clamp(15px,2vw,20px);color:#9898bb;max-width:600px;line-height:1.7;margin-bottom:40px;">Upload your resume, match job descriptions, practice mock interviews, and get a personalized career roadmap — all powered by AI.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;">
+      <button onclick="showRegister()" style="padding:16px 36px;background:linear-gradient(135deg,#7c6bff,#d966ff);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">🚀 Start for Free</button>
+      <button onclick="showLogin()" style="padding:16px 36px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#eeeeff;font-size:16px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Sign In →</button>
+    </div>
+
+    <!-- STATS -->
+    <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center;margin-bottom:80px;">
+      <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;background:linear-gradient(135deg,#7c6bff,#d966ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">5</div><div style="font-size:13px;color:#6b6b99;">AI Tools</div></div>
+      <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;background:linear-gradient(135deg,#3de88a,#38f9d7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">100%</div><div style="font-size:13px;color:#6b6b99;">Free Forever</div></div>
+      <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;background:linear-gradient(135deg,#4fc3f7,#7c6bff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Real</div><div style="font-size:13px;color:#6b6b99;">AI Feedback</div></div>
+      <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;background:linear-gradient(135deg,#ff9f43,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">24/7</div><div style="font-size:13px;color:#6b6b99;">Available</div></div>
+    </div>
+
+    <!-- FEATURES GRID -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1100px;width:100%;margin-bottom:80px;">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;text-align:left;">
+        <div style="font-size:36px;margin-bottom:14px;">📄</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Resume Analyzer</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">Upload your PDF resume and get a real ATS score, keyword analysis, and specific rewrite suggestions from AI.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;text-align:left;">
+        <div style="font-size:36px;margin-bottom:14px;">🎯</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">JD Matcher</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">Paste any job description and see your real match percentage with tailoring tips and cover letter outline.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;text-align:left;">
+        <div style="font-size:36px;margin-bottom:14px;">🎤</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Mock Interview</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">Practice with AI-generated role-specific questions. Get scored feedback on every single answer.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;text-align:left;">
+        <div style="font-size:36px;margin-bottom:14px;">📊</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Skill Gap Analyzer</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">See exactly which skills you're missing for your target role with priority gaps and free learning resources.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;text-align:left;">
+        <div style="font-size:36px;margin-bottom:14px;">🗺️</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Career Roadmap</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">Get a personalized 30/90-day roadmap generated from your actual resume and target role.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(124,107,255,0.12),rgba(217,102,255,0.12));border:1px solid rgba(124,107,255,0.25);border-radius:18px;padding:28px;text-align:left;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:36px;margin-bottom:14px;">🆓</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">100% Free</div>
+        <div style="font-size:13px;color:#9898bb;line-height:1.6;">No credit card. No hidden fees. All AI features completely free for every student.</div>
+        <button onclick="showRegister()" style="margin-top:16px;padding:12px;background:linear-gradient(135deg,#7c6bff,#d966ff);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Get Started →</button>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div style="max-width:800px;width:100%;margin-bottom:80px;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;margin-bottom:40px;">How it works</h2>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;gap:20px;align-items:flex-start;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c6bff,#d966ff);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</div>
+          <div><div style="font-size:16px;font-weight:600;margin-bottom:4px;">Create your free account</div><div style="font-size:13px;color:#9898bb;">Sign up in 30 seconds — no credit card needed.</div></div>
+        </div>
+        <div style="display:flex;gap:20px;align-items:flex-start;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c6bff,#d966ff);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</div>
+          <div><div style="font-size:16px;font-weight:600;margin-bottom:4px;">Upload your PDF resume</div><div style="font-size:13px;color:#9898bb;">AI reads every line and gives you a real ATS audit with specific fixes.</div></div>
+        </div>
+        <div style="display:flex;gap:20px;align-items:flex-start;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c6bff,#d966ff);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</div>
+          <div><div style="font-size:16px;font-weight:600;margin-bottom:4px;">Match job descriptions</div><div style="font-size:13px;color:#9898bb;">Paste any JD from LinkedIn or Naukri and get your match score instantly.</div></div>
+        </div>
+        <div style="display:flex;gap:20px;align-items:flex-start;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c6bff,#d966ff);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">4</div>
+          <div><div style="font-size:16px;font-weight:600;margin-bottom:4px;">Practice and get hired</div><div style="font-size:13px;color:#9898bb;">Practice mock interviews, fill skill gaps, follow your roadmap — get the job!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="background:linear-gradient(135deg,rgba(124,107,255,0.12),rgba(217,102,255,0.12));border:1px solid rgba(124,107,255,0.25);border-radius:24px;padding:48px;max-width:600px;width:100%;margin-bottom:40px;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;margin-bottom:12px;">Ready to get started?</h2>
+      <p style="font-size:14px;color:#9898bb;margin-bottom:24px;">Join students who are already using CareerOS AI to land their dream jobs.</p>
+      <button onclick="showRegister()" style="padding:16px 40px;background:linear-gradient(135deg,#7c6bff,#d966ff);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">🚀 Create Free Account</button>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="font-size:12px;color:#6b6b99;">Built with ❤️ for B.Tech Students • CareerOS AI © 2026</div>
+  </div>
+</div>
+
 <div id="login-page" class="auth-page" style="display:none;">
   <div class="auth-wrap">
 
