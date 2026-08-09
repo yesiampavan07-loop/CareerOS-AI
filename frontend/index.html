@@ -252,6 +252,20 @@
         <div class="scard"><div class="scard-icon">🎤</div><div class="scard-val" style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-int">0</div><div class="scard-lbl">Mock Interviews</div><div class="scard-chg" style="color:var(--dim);">Start practising</div></div>
         <div class="scard"><div class="scard-icon">📊</div><div class="scard-val" style="background:var(--go);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="d-sk">—</div><div class="scard-lbl">Skills Found</div><div class="scard-chg" id="d-sk-s" style="color:var(--dim);">Analyze resume first</div></div>
       </div>
+      <!-- OVERALL PROGRESS -->
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-title">🎯 Overall Career Readiness — <span id="progress-pct">0%</span></div>
+  <div class="card-sub">Complete all 4 tools to reach 100%</div>
+  <div style="height:12px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;margin-bottom:12px;">
+    <div id="overall-progress" style="height:100%;width:0%;background:linear-gradient(135deg,#7c6bff,#d966ff);border-radius:6px;transition:width 1.5s ease;"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:11px;color:#6b6b99;">
+    <span>📄 Resume</span>
+    <span>🎯 JD Match</span>
+    <span>🎤 Interview</span>
+    <span>📊 Skill Gap</span>
+  </div>
+</div>
       <div class="g2">
         <div class="card">
           <div class="card-title">🚀 Quick Actions</div>
@@ -337,7 +351,9 @@
             </div>
           </div>
           <div class="card hidden" id="sugg-card">
-            <div class="card-title">💡 Claude's Detailed Feedback</div>
+            <div class="card-title">💡 Claude's Detailed Feedback
+  <button onclick="downloadReport()" style="margin-left:auto;padding:6px 14px;background:linear-gradient(135deg,#7c6bff,#d966ff);border:none;border-radius:8px;color:#fff;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;">📥 Download Report</button>
+</div>
             <div id="sugg-content" class="ai-out" style="margin-top:8px;"></div>
           </div>
         </div>

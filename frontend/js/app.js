@@ -130,7 +130,6 @@ function doLogout() {
   currentResumeId = null;
 }
 
-// ── DASHBOARD ───────────────────────────────
 async function loadDashboard() {
   try {
     const data = await apiDashboard();
@@ -142,22 +141,37 @@ async function loadDashboard() {
     if (data.jd_match_score !== null) {
       document.getElementById('d-jd').textContent = data.jd_match_score + '%';
       document.getElementById('d-jd-s').textContent = data.jd_match_level + ' match';
+      document.getElementById('d-jd-s').className = 'scard-chg ' + (data.jd_match_score >= 65 ? 'pos' : 'neg');
     }
     if (data.interview_count) {
       document.getElementById('d-int').textContent = data.interview_count;
+      document.getElementById('d-int-s') && (document.getElementById('d-int-s').textContent = data.interview_count + ' sessions done');
     }
     if (data.skill_readiness !== null) {
       document.getElementById('d-sk').textContent = data.skill_readiness + '%';
       document.getElementById('d-sk-s').textContent = 'readiness score';
+      document.getElementById('d-sk-s').className = 'scard-chg ' + (data.skill_readiness >= 70 ? 'pos' : 'neg');
     }
     if (data.resume_name) {
       updateResumeStatus(data.resume_name);
       document.getElementById('dash-alert').className = 'alert a-success';
       document.getElementById('dash-alert').innerHTML = '✅ <strong>Resume on file:</strong> ' + data.resume_name + ' — all tools are ready!';
     }
+
+    // Progress bar
+    let progress = 0;
+    if (data.ats_score) progress += 25;
+    if (data.jd_match_score) progress += 25;
+    if (data.interview_count > 0) progress += 25;
+    if (data.skill_readiness) progress += 25;
+
+    const progressEl = document.getElementById('overall-progress');
+    if (progressEl) {
+      progressEl.style.width = progress + '%';
+      document.getElementById('progress-pct').textContent = progress + '%';
+    }
   } catch(e) { console.log('Dashboard load:', e.message); }
 }
-
 // ── RESUME ANALYZER ─────────────────────────
 function dropFile(ev) { ev.preventDefault(); const f = ev.dataTransfer.files[0]; if(f) handleFile(f); }
 function fileChosen(ev) { const f = ev.target.files[0]; if(f) handleFile(f); }
@@ -486,4 +500,84 @@ function updateTimerDisplay() {
     el.textContent = `⏱ ${timeLeft}s`;
     el.style.color = timeLeft > 20 ? '#3de88a' : timeLeft > 10 ? '#ff9f43' : '#ff5f5f';
   }
+}
+// ── PDF REPORT DOWNLOAD ──
+function downloadReport() {
+  const name = document.getElementById('sidebar-name').textContent;
+  const ats = document.getElementById('d-ats').textContent || 'N/A';
+  const jd = document.getElementById('d-jd').textContent || 'N/A';
+  const interviews = document.getElementById('d-int').textContent || '0';
+  const feedback = document.getElementById('sugg-content')?.textContent || 'Run Resume Analyzer first';
+  const foundKw = Array.from(document.querySelectorAll('#kw-found .tag')).map(t=>t.textContent).join(', ') || 'N/A';
+  const missKw = Array.from(document.querySelectorAll('#kw-miss .tag')).map(t=>t.textContent).join(', ') || 'N/A';
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>CareerOS AI Report — ${name}</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #333; }
+  .header { text-align: center; border-bottom: 3px solid #7c6bff; padding-bottom: 20px; margin-bottom: 30px; }
+  .logo { font-size: 28px; font-weight: 800; color: #7c6bff; }
+  .subtitle { color: #666; font-size: 14px; }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 18px; font-weight: 700; color: #7c6bff; border-left: 4px solid #7c6bff; padding-left: 12px; margin-bottom: 12px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .score-box { background: #f8f7ff; border: 2px solid #7c6bff; border-radius: 12px; padding: 16px; text-align: center; }
+  .score-val { font-size: 32px; font-weight: 800; color: #7c6bff; }
+  .score-lbl { font-size: 12px; color: #666; margin-top: 4px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; margin: 3px; }
+  .tag-green { background: #e8fdf2; color: #1a8a4a; border: 1px solid #a3e6c0; }
+  .tag-red { background: #fff0f0; color: #cc2222; border: 1px solid #ffb3b3; }
+  .feedback { background: #f8f7ff; border-radius: 12px; padding: 20px; font-size: 13px; line-height: 1.8; color: #444; white-space: pre-wrap; }
+  .footer { text-align: center; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">🚀 CareerOS AI</div>
+  <div class="subtitle">Career Intelligence Report for <strong>${name}</strong></div>
+  <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">📊 Performance Summary</div>
+  <div class="score-grid">
+    <div class="score-box"><div class="score-val">${ats}</div><div class="score-lbl">ATS Score</div></div>
+    <div class="score-box"><div class="score-val">${jd}</div><div class="score-lbl">JD Match</div></div>
+    <div class="score-box"><div class="score-val">${interviews}</div><div class="score-lbl">Interviews</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">✅ Skills Found in Resume</div>
+  <div>${foundKw.split(',').map(k=>`<span class="tag tag-green">${k.trim()}</span>`).join('')}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">❌ Missing Keywords</div>
+  <div>${missKw.split(',').map(k=>`<span class="tag tag-red">${k.trim()}</span>`).join('')}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">💡 AI Feedback</div>
+  <div class="feedback">${feedback}</div>
+</div>
+
+<div class="footer">
+  Generated by CareerOS AI • careeros-ai-amcb.onrender.com<br>
+  This report is AI-generated and intended for educational purposes.
+</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `CareerOS-Report-${name}-${new Date().toLocaleDateString('en-IN').replace(/\//g,'-')}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
