@@ -212,6 +212,10 @@ async function analyzeResume() {
     document.getElementById('kw-found').innerHTML = (d.found_keywords||[]).map(k => `<span class="tag t-g">${k}</span>`).join('');
     document.getElementById('kw-miss').innerHTML  = (d.missing_keywords||[]).map(k => `<span class="tag t-r">${k}</span>`).join('');
     document.getElementById('sugg-content').textContent = d.feedback || 'Analysis complete.';
+// Add copy button
+document.getElementById('sugg-card').querySelector('.card-title').innerHTML = `
+  💡 Claude's Detailed Feedback
+  <button onclick="copyText('sugg-content')" style="margin-left:auto;padding:5px 12px;background:rgba(124,107,255,0.15);border:1px solid rgba(124,107,255,0.3);border-radius:8px;color:#7c6bff;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;">📋 Copy</button>`;
     document.getElementById('d-ats').textContent = score + '%';
     document.getElementById('d-ats-s').textContent = score >= 80 ? '↑ Strong resume' : '↑ Needs improvement';
     document.getElementById('d-ats-s').className = 'scard-chg ' + (score >= 70 ? 'pos' : 'neg');
@@ -299,7 +303,7 @@ async function startInterview() {
     currentSessionId = data.session_id;
     intQ = 1;
     addAI(`I'll be your AI interviewer for a <strong>${intType}</strong> interview for <strong>${role}</strong>.<br><br>Question 1 of 5:<br><br><strong>${data.question}</strong>`);
-    btn.innerHTML = '🔄 Restart'; btn.disabled = false;
+    startTimer();
     document.getElementById('d-int').textContent = parseInt(document.getElementById('d-int').textContent || '0') + 1;
   } catch(e) {
     addAI('❌ Failed to start interview: ' + e.message);
@@ -443,5 +447,43 @@ async function genRoadmap() {
   } catch(e) {
     document.getElementById('rm-results').innerHTML = `<div class="alert a-error">❌ ${e.message}</div>`;
     btn.innerHTML = '🗺️ Retry'; btn.disabled = false;
+  }
+}
+// ── COPY BUTTON ──
+function copyText(elementId) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ Copied!';
+    btn.style.color = '#3de88a';
+    setTimeout(() => {
+      btn.textContent = '📋 Copy';
+      btn.style.color = '#7c6bff';
+    }, 2000);
+  });
+}
+// ── INTERVIEW TIMER ──
+let timerInterval = null;
+let timeLeft = 60;
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 60;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('timer-display').style.color = '#ff5f5f';
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer-display');
+  if (el) {
+    el.textContent = `⏱ ${timeLeft}s`;
+    el.style.color = timeLeft > 20 ? '#3de88a' : timeLeft > 10 ? '#ff9f43' : '#ff5f5f';
   }
 }
