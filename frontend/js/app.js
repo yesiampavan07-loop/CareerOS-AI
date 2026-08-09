@@ -39,8 +39,12 @@ function go(id, el) {
 function switchAuthTab(id, btn) {
   document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
-  ['tab-signin','tab-register'].forEach(x => document.getElementById(x).classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+  ['tab-signin','tab-register'].forEach(x => {
+    const el = document.getElementById(x);
+    if(el) el.classList.add('hidden');
+  });
+  const target = document.getElementById(id);
+  if(target) target.classList.remove('hidden');
 }
 
 function togglePwd(inputId, btn) {
